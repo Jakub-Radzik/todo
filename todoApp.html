@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Simple web page, my personal portfolio, some school projects, let's test and leave feedback, write me and let me know">
+    <meta name="keywords" content="HTML,CSS,Jquery,JavaScript, PHP, MySQL, Bootstrap, Jakub Radzik, Jakub Radzik projekty, Jakub Radzik projekt, Rakub, rakub, rakub pl, rakub projekt, rakub projeky, ezn, ezniack's, ezniak, ezniacks, ezniacks projects, uczniowskie projekty, web developer, web development, strony internetowe, strony internetowe wroclaw, strony internetowe wrocław, tanie strony internetowe, tanie strony internetowe wrocław, tanie strony internetowe wroclaw">
+    <meta name="author" content="Jakub Radzik">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>Jakub Radzik- ToDo</title>
+</head>
+
+
+<body>
+
+<!--MAIN CONTENT-->
+
+<main class="todo container-fluid d-flex flex-column align-items-center">
+<h1 class="display-4 text-center">ToDo App</h1>
+   <form action="">
+    Your task:
+    <input type="text" id="task" class="form-control">
+    <p class="hint todo"></p>
+    Important level of your task:
+    <div class="d-flex flex-row justify-content-around">
+    <span>1<input type="radio" name="important" id="l1" checked></span>
+    <span>2<input type="radio" name="important" id="l2"></span>
+    <span>3<input type="radio" name="important" id="l3"></span>
+    </div>
+    <input type="button" value="Add" class="btn btn-outline-dark" onclick="addTask()">
+    <input type="button" value="Save" class="btn btn-outline-dark"  data-toggle="modal" data-target="#save">
+    <input type="button" value="Show Saved" class="btn btn-outline-dark"  data-toggle="modal" data-target="#showSaved">
+    <input type="button" value="Delete List" class="btn btn-outline-dark" onclick="del(1)">
+    <input type="button" value="Clear Memory" class="btn btn-outline-dark" onclick="del(2)">
+</form>
+
+
+
+
+<!-- Modal Save -->
+<div class="modal fade" id="save" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <input type="button" value="Append to existing data" onclick="save(1)" class="form-control btn btn-outline-dark" data-dismiss="modal">
+        <input type="button" value="Overwrite" onclick="save(2)" class="form-control btn btn-outline-dark" data-dismiss="modal">
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-outline-dark">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal show Saved -->
+<div class="modal fade" id="showSaved" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <input type="button" value="Append to list" onclick="showSaved(1)" class="form-control btn btn-outline-dark" data-dismiss="modal">
+        <input type="button" value="Overwrite the current list" onclick="showSaved(2)" class="form-control btn btn-outline-dark" data-dismiss="modal">
+      </div>
+      <div class="modal-footer">
+        <span class="hintLocal todo"></span>
+        <button type="button" data-dismiss="modal" class="btn btn-outline-dark">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="tasks container mt-5">
+
+</div>
+
+<script>
+
+  var input = document.querySelectorAll("input");
+  // input[2]- #task
+  // input[3]- #l1
+  // input[4]- #l2
+  // input[5]- #l3
+
+  function addTask(){
+
+      let taskTxt = `<span>${input[2].value}</span>`;
+      let bgClass='';
+
+      if(input[3].checked){
+          bgClass='bg-info';
+      } else if(input[4].checked){
+          bgClass='bg-warning';
+      }   else{
+          bgClass='bg-danger';
+      }
+
+      let card = `
+      <div class="card mb-3 ${bgClass}">
+          <div class="card-body">
+              <span onclick="this.parentElement.parentElement.style.display = 'none';" class="btn btn-danger border border-dark">&times;</span>
+              <span>${taskTxt}</span>    
+          </div>
+      </div>
+      `;
+      
+      if(input[2].value.length){
+          document.querySelector(".tasks").innerHTML+= card;
+          document.querySelector(".hint").innerHTML="";
+          input[2].value="";
+      } else{
+          document.querySelector(".hint").innerHTML="Write your task!"
+      }
+
+      
+  }
+
+  function save(x){
+
+    localStorage.setItem("Tasks",'');
+
+    switch(x){
+      case 1:
+        let newData = document.querySelector(".tasks").innerHTML;
+        let oldData = localStorage.getItem('Tasks');
+        let data = `${oldData}${newData}`
+        localStorage.setItem('Tasks', data);
+      break;
+      case 2:
+        localStorage.setItem('Tasks', document.querySelector(".tasks").innerHTML);
+      break;
+    }
+  }
+
+  function showSaved(x){
+
+    if (typeof(Storage) !== "undefined") {
+      if(localStorage.getItem("Tasks") != null){
+        switch(x){
+
+          case 1:
+            document.querySelector(".tasks").innerHTML += localStorage.getItem('Tasks');
+            localStorage.clear();
+          break;
+
+          case 2:
+            document.querySelector(".tasks").innerHTML = localStorage.getItem('Tasks');
+            localStorage.clear();
+          break;
+
+        }
+      }
+    }
+  }
+
+  function del(x){
+
+    switch(x){
+      case 1:
+        document.querySelector(".tasks").innerHTML='';
+      break;
+      
+      case 2:
+        localStorage.clear();
+      break;
+    }
+  }
+  
+  
+  </script>
+
+</main>
+</body>
+</html>
