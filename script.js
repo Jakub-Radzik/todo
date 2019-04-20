@@ -1,19 +1,17 @@
-
-
-  var input = document.querySelectorAll("input");
-  // input[2]- #task
-  // input[3]- #l1
-  // input[4]- #l2
-  // input[5]- #l3
+var input = document.querySelectorAll("input");
+// input[0]- #task
+// input[1]- #l1
+// input[2]- #l2
+// input[3]- #l3
 
   function addTask(){
 
-      let taskTxt = `<span>${input[2].value}</span>`;
+      let taskTxt = `<span>${input[0].value}</span>`;
       let bgClass='';
 
-      if(input[3].checked){
+      if(input[1].checked){
           bgClass='bg-info';
-      } else if(input[4].checked){
+      } else if(input[2].checked){
           bgClass='bg-warning';
       }   else{
           bgClass='bg-danger';
@@ -23,15 +21,15 @@
       <div class="card mb-3 ${bgClass}">
           <div class="card-body">
               <span onclick="this.parentElement.parentElement.style.display = 'none';" class="btn btn-danger border border-dark">&times;</span>
-              <span>${taskTxt}</span>    
+              ${taskTxt} 
           </div>
       </div>
       `;
       
-      if(input[2].value.length){
+      if(input[0].value){
           document.querySelector(".tasks").innerHTML+= card;
           document.querySelector(".hint").innerHTML="";
-          input[2].value="";
+          input[0].value="";
       } else{
           document.querySelector(".hint").innerHTML="Write your task!"
       }
